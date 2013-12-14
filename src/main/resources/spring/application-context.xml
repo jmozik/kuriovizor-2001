@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+                            http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+                            http://www.springframework.org/schema/context
+                            http://www.springframework.org/schema/context/spring-context-3.0.xsd
+                            http://www.springframework.org/schema/tx
+     						http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
+    
+    <context:annotation-config />
+    
+    <import resource="data-storage-layer.xml" />
+    
+    <!--
+     
+    <bean id="storeDao" class="cz.moz.stman.daos.StoreDao" />
+    
+    <bean id="unitsDao" class="cz.moz.stman.daos.UnitsDao" />
+    
+    
+    
+    <bean id="formUnit" class="cz.moz.stman.ui.UnitForm" />-->
+    
+    <bean id="formAppl" class="cz.moz.kuriovizor.ui.ApplicationForm" />
+    
+    <bean id="storageEntitiesDao" class="cz.moz.kuriovizor.daos.StorageEntitiesDaoImpl" />
+    
+    <bean id="unitsDao" class="cz.moz.kuriovizor.daos.UnitsDaoImpl" />
+
+</beans>
