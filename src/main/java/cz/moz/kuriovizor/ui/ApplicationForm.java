@@ -61,6 +61,7 @@ public class ApplicationForm extends javax.swing.JFrame {
     public void initData() {
         this.lblStorageEntriesCount.setText(String.valueOf(this.storeDao.getUnitsCount()));
         this.lblUnitsCount.setText(String.valueOf(unitsDao.getAllUnits().size()));
+        this.lblCritical.setText(String.valueOf(this.storeDao.getCriticalEntries().size()));
     
         StoreEntriesListModel seModel = new StoreEntriesListModel();
         seModel.setList(storeDao.getCriticalEntries());
@@ -108,7 +109,7 @@ public class ApplicationForm extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         lstCriticalEntities = new javax.swing.JList();
-        jLabel4 = new javax.swing.JLabel();
+        lblCritical = new javax.swing.JLabel();
         jButton3 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
@@ -161,8 +162,8 @@ public class ApplicationForm extends javax.swing.JFrame {
         lstCriticalEntities.setCellRenderer(new StoreEntryListCellRenderer());
         jScrollPane1.setViewportView(lstCriticalEntities);
 
-        jLabel4.setText(String.valueOf(this.getListCritical().getSize()));
-        jLabel4.setAutoscrolls(true);
+        lblCritical.setText(String.valueOf(this.getListCritical().getSize()));
+        lblCritical.setAutoscrolls(true);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -181,7 +182,7 @@ public class ApplicationForm extends javax.swing.JFrame {
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel3)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jLabel4)))
+                                .addComponent(lblCritical)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -195,7 +196,7 @@ public class ApplicationForm extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(jLabel4))
+                    .addComponent(lblCritical))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -386,15 +387,8 @@ public class ApplicationForm extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        List<StorageEntity> store = this.storeDao.getAllEntities();
-        List<StorageEntity> critical = new ArrayList<>();
-        for (StorageEntity entry : store) {
-            if (entry.getCount() < 5) {
-                critical.add(entry);
-            }
-        }
 
-        System.out.println("Pocet polozek s kritickym stavem: " + critical.size());
+        System.out.println("Pocet polozek s kritickym stavem: " + this.storeDao.getCriticalEntries().size());
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void importMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importMenuItemActionPerformed
@@ -463,7 +457,6 @@ public class ApplicationForm extends javax.swing.JFrame {
     private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
@@ -472,6 +465,7 @@ public class ApplicationForm extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
+    private javax.swing.JLabel lblCritical;
     private javax.swing.JLabel lblStorageEntriesCount;
     private javax.swing.JLabel lblUnitsCount;
     private javax.swing.JList lstCriticalEntities;
