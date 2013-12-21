@@ -7,7 +7,7 @@
     <property name="hibernate.connection.driver_class">org.hsqldb.jdbc.JDBCDriver</property>
     <property name="hibernate.connection.url">jdbc:hsqldb:hsql://localhost/kuriovizor-db</property>
     <property name="hibernate.connection.username">SA</property>
-    <mapping class="kuriovizor.domain.StorageEntity"/>
-    <mapping class="kuriovizor.domain.Unit"/>
+    <mapping class="cz.moz.kuriovizor.domain.StoreEntity"/>
+    <mapping class="cz.moz.kuriovizor.domain.Unit"/>
   </session-factory>
 </hibernate-configuration>

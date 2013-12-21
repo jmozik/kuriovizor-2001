@@ -96,9 +96,15 @@
             <artifactId>jta</artifactId>
             <version>1.1</version>
         </dependency>
+        <dependency>
+            <groupId>org.jdesktop</groupId>
+            <artifactId>beansbinding</artifactId>
+            <version>1.2.1</version>
+        </dependency>
     </dependencies>
     
     <build>
+        <finalName>kuriovizor-2001</finalName>
         <resources>
             <!--            <resource>
                 <directory>/src/main/java</directory>
@@ -116,6 +122,51 @@
                 <configuration>
                     <source>1.7</source>
                     <target>1.7</target>
+                </configuration>
+            </plugin>
+            
+            <!--            <plugin> 
+                <artifactId>maven-assembly-plugin</artifactId> 
+                <version>2.4</version> 
+                <configuration> 
+                    <descriptors> 
+                        <descriptor>src/main/resources/assemble/myAssembly.xml</descriptor> 
+                    </descriptors> 
+                    <archive> 
+                        <manifest> 
+                            <mainClass>cz.moz.kuriovizor.Application</mainClass> 
+                            <addClasspath>true</addClasspath> 
+                        </manifest> 
+                    </archive> 
+                </configuration> 
+            </plugin> -->
+            
+            <plugin> 
+                <artifactId>maven-dependency-plugin</artifactId> 
+                <executions> 
+                    <execution> 
+                        <phase>package</phase> 
+                        <goals> 
+                            <goal>copy-dependencies</goal> 
+                        </goals> 
+                        <configuration> 
+                            <outputDirectory>${project.build.directory}/lib</outputDirectory> 
+                        </configuration> 
+                    </execution> 
+                </executions> 
+            </plugin> 
+            
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>cz.moz.kuriovizor.Application</mainClass>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib/</classpathPrefix>
+                        </manifest>
+                    </archive>
                 </configuration>
             </plugin>
         </plugins>

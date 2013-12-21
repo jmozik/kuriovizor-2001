@@ -6,7 +6,7 @@
 
 package cz.moz.kuriovizor.daos;
 
-import cz.moz.kuriovizor.domain.StorageEntity;
+import cz.moz.kuriovizor.domain.StoreEntity;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -17,17 +17,21 @@ import java.util.List;
  */
 public interface StorageEntitiesDao {
     
-    public List<StorageEntity> getAllEntities();
+    public List<StoreEntity> getAllEntities();
     
-    public void saveEntity(StorageEntity entity);
+    public void saveEntity(StoreEntity entity);
     
-    public StorageEntity getEntity(int id);
+    public void updateEntity(StoreEntity entity);
     
-    public List<StorageEntity> getCriticalEntries();
+    public StoreEntity getEntity(int id);
+    
+    public void deleteEntity(int id);
+    
+    public List<StoreEntity> getCriticalEntries();
     
     public boolean substractEntityCount(int id, int count);
     
-    public boolean substractEntityCount(StorageEntity entity, int count);
+    public boolean substractEntityCount(StoreEntity entity, int count);
     
     public void importCSVFile(File file) throws IOException;
 

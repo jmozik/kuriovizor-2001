@@ -7,7 +7,6 @@ package cz.moz.kuriovizor.ui;
 
 import cz.moz.kuriovizor.daos.StorageEntitiesDao;
 import cz.moz.kuriovizor.daos.UnitsDao;
-import cz.moz.kuriovizor.domain.StorageEntity;
 import cz.moz.kuriovizor.ui.sub.StoreEntriesListModel;
 import cz.moz.kuriovizor.ui.sub.StoreEntryListCellRenderer;
 import java.io.File;
@@ -16,12 +15,9 @@ import java.io.IOException;
 //import cz.moz.stman.daos.UnitsDao;
 //import cz.moz.stman.domain.UnitEntry;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
-import javax.swing.SwingUtilities;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -41,7 +37,7 @@ public class ApplicationForm extends javax.swing.JFrame {
     private StorageEntitiesDao storeDao;
     @Autowired
     private UnitsDao unitsDao;
-
+    
     private StoreEntriesListModel listCritical;
 
     /**
@@ -59,6 +55,7 @@ public class ApplicationForm extends javax.swing.JFrame {
     }
     
     public void initData() {
+        
         this.lblStorageEntriesCount.setText(String.valueOf(this.storeDao.getUnitsCount()));
         this.lblUnitsCount.setText(String.valueOf(unitsDao.getAllUnits().size()));
         this.lblCritical.setText(String.valueOf(this.storeDao.getCriticalEntries().size()));
@@ -76,7 +73,7 @@ public class ApplicationForm extends javax.swing.JFrame {
 //        if(this.listCritical == null) {
 //            List<StorageEntity> store = this.storeDao.loadStoreEntries();
 //            List<StorageEntity> critical = new ArrayList<>();
-//            for(StorageEntity entry : store) {
+//            for(StoreEntity entry : store) {
 //                if(entry.getCount() < 5)
 //                    critical.add(entry);
 //            }
@@ -110,7 +107,7 @@ public class ApplicationForm extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         lstCriticalEntities = new javax.swing.JList();
         lblCritical = new javax.swing.JLabel();
-        jButton3 = new javax.swing.JButton();
+        btnStorage = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
         lblUnitsCount = new javax.swing.JLabel();
@@ -124,6 +121,7 @@ public class ApplicationForm extends javax.swing.JFrame {
         saveAsMenuItem = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         importMenuItem = new javax.swing.JMenuItem();
+        jMenuItem1 = new javax.swing.JMenuItem();
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
         exitMenuItem = new javax.swing.JMenuItem();
         editMenu = new javax.swing.JMenu();
@@ -202,10 +200,10 @@ public class ApplicationForm extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jButton3.setText("jButton3");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        btnStorage.setText("Zobrazit sklad");
+        btnStorage.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                btnStorageActionPerformed(evt);
             }
         });
 
@@ -280,6 +278,9 @@ public class ApplicationForm extends javax.swing.JFrame {
             }
         });
         fileMenu.add(importMenuItem);
+
+        jMenuItem1.setText("Preferences...");
+        fileMenu.add(jMenuItem1);
         fileMenu.add(jSeparator2);
 
         exitMenuItem.setMnemonic('x');
@@ -345,7 +346,7 @@ public class ApplicationForm extends javax.swing.JFrame {
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                 .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addComponent(jButton3))
+                            .addComponent(btnStorage))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -357,7 +358,7 @@ public class ApplicationForm extends javax.swing.JFrame {
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
-                .addComponent(jButton3)
+                .addComponent(btnStorage)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -386,10 +387,11 @@ public class ApplicationForm extends javax.swing.JFrame {
 //        this.unitForm.setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-
-        System.out.println("Pocet polozek s kritickym stavem: " + this.storeDao.getCriticalEntries().size());
-    }//GEN-LAST:event_jButton3ActionPerformed
+    private void btnStorageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStorageActionPerformed
+       StoreForm form = new StoreForm(this, true);
+       form.initData(storeDao);
+       form.setVisible(true);
+    }//GEN-LAST:event_btnStorageActionPerformed
 
     private void importMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importMenuItemActionPerformed
        System.out.println("evt.getID(): " + evt.getID());
@@ -443,6 +445,7 @@ public class ApplicationForm extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem aboutMenuItem;
+    private javax.swing.JButton btnStorage;
     private javax.swing.JMenuItem contentsMenuItem;
     private javax.swing.JMenuItem copyMenuItem;
     private javax.swing.JMenuItem cutMenuItem;
@@ -454,11 +457,11 @@ public class ApplicationForm extends javax.swing.JFrame {
     private javax.swing.JMenuItem importMenuItem;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;

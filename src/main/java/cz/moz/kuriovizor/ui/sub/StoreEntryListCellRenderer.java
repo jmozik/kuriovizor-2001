@@ -7,7 +7,7 @@
 package cz.moz.kuriovizor.ui.sub;
 
 
-import cz.moz.kuriovizor.domain.StorageEntity;
+import cz.moz.kuriovizor.domain.StoreEntity;
 import java.awt.Component;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
@@ -22,8 +22,8 @@ public class StoreEntryListCellRenderer extends DefaultListCellRenderer {
     public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
         super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
         
-        if(value instanceof StorageEntity) {
-            StorageEntity se = (StorageEntity) value;
+        if(value instanceof StoreEntity) {
+            StoreEntity se = (StoreEntity) value;
             String name = se.getProductName();
             if(name.length() > 35)
                 name = name.substring(0, 32) + "...";

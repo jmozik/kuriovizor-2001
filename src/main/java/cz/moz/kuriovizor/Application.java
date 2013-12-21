@@ -18,6 +18,9 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 public class Application {
     
     public static void main(String[] args) {
+        
+//        org.hsqldb.Server.main(new String[]{"-database.0", "file:databases/kuriovizor-db", "-dbname.0", "kuriovizor-db"});
+        
         ApplicationContext appContext = new ClassPathXmlApplicationContext("spring/application-context.xml");
         
 //        StorageEntitiesDao dao =  appContext.getBean(StorageEntitiesDao.class);

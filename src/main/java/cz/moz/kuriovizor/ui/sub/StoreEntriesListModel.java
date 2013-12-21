@@ -7,7 +7,7 @@
 package cz.moz.kuriovizor.ui.sub;
 
 
-import cz.moz.kuriovizor.domain.StorageEntity;
+import cz.moz.kuriovizor.domain.StoreEntity;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.AbstractListModel;
@@ -16,14 +16,14 @@ import javax.swing.AbstractListModel;
  *
  * @author moz
  */
-public class StoreEntriesListModel extends AbstractListModel<StorageEntity> {
-    private List<StorageEntity> list;
+public class StoreEntriesListModel extends AbstractListModel<StoreEntity> {
+    private List<StoreEntity> list;
 
     public StoreEntriesListModel() {
         this.list = new ArrayList<>();
     }
 
-    public void setList(List<StorageEntity> list) {
+    public void setList(List<StoreEntity> list) {
         this.list = list;
     }
     
@@ -33,11 +33,11 @@ public class StoreEntriesListModel extends AbstractListModel<StorageEntity> {
     }
 
     @Override
-    public StorageEntity getElementAt(int index) {
+    public StoreEntity getElementAt(int index) {
         return this.list.get(index);
     }
     
-    public void addStoreEntry(StorageEntity storeEntry) {
+    public void addStoreEntry(StoreEntity storeEntry) {
         this.list.add(storeEntry);
     }
     

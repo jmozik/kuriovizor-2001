@@ -5,7 +5,7 @@
  */
 package cz.moz.kuriovizor.daos;
 
-import cz.moz.kuriovizor.domain.StorageEntity;
+import cz.moz.kuriovizor.domain.StoreEntity;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -24,26 +24,39 @@ import org.springframework.transaction.annotation.Transactional;
 public class StorageEntitiesDaoImpl extends CommonDao implements StorageEntitiesDao {
 
     @Transactional
-    public List<StorageEntity> getAllEntities() {
-        Query query = getSession().createQuery("from StorageEntity");
+    public List<StoreEntity> getAllEntities() {
+        Query query = getSession().createQuery("from StoreEntity");
         return query.list();
     }
 
     @Transactional
-    public void saveEntity(StorageEntity entity) {
+    public void saveEntity(StoreEntity entity) {
         getSession().save(entity);
     }
-
+    
     @Transactional
-    public StorageEntity getEntity(int id) {
-        Query query = getSession().createQuery("from StorageEntity as se where se.id = '" + id + "'");
-        return (StorageEntity) query.list().get(0);
+    public void updateEntity(StoreEntity entity) {
+        getSession().update(entity);
     }
 
     @Transactional
-    public List<StorageEntity> getCriticalEntries() {
-        Query query = getSession().createQuery("from StorageEntity as se where se.count <= se.minCount");
+    public StoreEntity getEntity(int id) {
+        Query query = getSession().createQuery("from StoreEntity as se where se.id = '" + id + "'");
+        return (StoreEntity) query.list().get(0);
+    }
+
+    @Transactional
+    public List<StoreEntity> getCriticalEntries() {
+        Query query = getSession().createQuery("from StoreEntity as se where se.count <= se.minCount");
         return query.list();
+    }
+    
+    @Transactional
+    public void deleteEntity(int id) {
+        Query query = getSession().createQuery("delete from StoreEntity as e where e.id = :id");
+        query.setInteger("id", id);
+        int affected = query.executeUpdate();
+        System.out.println("Deleted " + affected + " records.");
     }
 
     @Transactional
@@ -52,7 +65,7 @@ public class StorageEntitiesDaoImpl extends CommonDao implements StorageEntities
     }
 
     @Transactional
-    public boolean substractEntityCount(StorageEntity entity, int count) {
+    public boolean substractEntityCount(StoreEntity entity, int count) {
         if (entity != null) {
             if (entity.getCount() - count >= 0) {
                 entity.setCount(entity.getCount() - count);
@@ -71,20 +84,20 @@ public class StorageEntitiesDaoImpl extends CommonDao implements StorageEntities
         while ((line = reader.readLine()) != null) {
             line += ";";
             String[] data = line.split("#");
-            StorageEntity entity = createStorageEntityFromLine(data);
+            StoreEntity entity = createStorageEntityFromLine(data);
             saveEntity(entity);
         }
         reader.close();
 
     }
 
-    private StorageEntity createStorageEntityFromLine(String[] line) {
+    private StoreEntity createStorageEntityFromLine(String[] line) {
         if (line.length != 8) {
             System.out.println("Vyskytl se problem s parsovanim zaznamu na radku " + line[0]);
             return null;
         }
 
-        StorageEntity entity = new StorageEntity();
+        StoreEntity entity = new StoreEntity();
         entity.setCompany(line[1]);
         entity.setProductName(line[2].replace("\"", ""));
         if (!line[3].equals("")) {

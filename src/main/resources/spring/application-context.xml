@@ -25,6 +25,8 @@
     
     <bean id="formAppl" class="cz.moz.kuriovizor.ui.ApplicationForm" />
     
+    <!--<bean id="formStore" class="cz.moz.kuriovizor.ui.StoreForm" />-->
+            
     <bean id="storageEntitiesDao" class="cz.moz.kuriovizor.daos.StorageEntitiesDaoImpl" />
     
     <bean id="unitsDao" class="cz.moz.kuriovizor.daos.UnitsDaoImpl" />
