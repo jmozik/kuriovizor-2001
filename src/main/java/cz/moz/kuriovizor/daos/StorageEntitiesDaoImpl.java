@@ -24,34 +24,40 @@ import org.springframework.transaction.annotation.Transactional;
 public class StorageEntitiesDaoImpl extends CommonDao implements StorageEntitiesDao {
 
     @Transactional
+    @Override
     public List<StoreEntity> getAllEntities() {
         Query query = getSession().createQuery("from StoreEntity");
         return query.list();
     }
 
     @Transactional
+    @Override
     public void saveEntity(StoreEntity entity) {
         getSession().save(entity);
     }
     
     @Transactional
+    @Override
     public void updateEntity(StoreEntity entity) {
         getSession().update(entity);
     }
 
     @Transactional
+    @Override
     public StoreEntity getEntity(int id) {
         Query query = getSession().createQuery("from StoreEntity as se where se.id = '" + id + "'");
         return (StoreEntity) query.list().get(0);
     }
 
     @Transactional
+    @Override
     public List<StoreEntity> getCriticalEntries() {
         Query query = getSession().createQuery("from StoreEntity as se where se.count <= se.minCount");
         return query.list();
     }
     
     @Transactional
+    @Override
     public void deleteEntity(int id) {
         Query query = getSession().createQuery("delete from StoreEntity as e where e.id = :id");
         query.setInteger("id", id);
@@ -60,11 +66,13 @@ public class StorageEntitiesDaoImpl extends CommonDao implements StorageEntities
     }
 
     @Transactional
+    @Override
     public boolean substractEntityCount(int id, int count) {
         return substractEntityCount(getEntity(id), count);
     }
 
     @Transactional
+    @Override
     public boolean substractEntityCount(StoreEntity entity, int count) {
         if (entity != null) {
             if (entity.getCount() - count >= 0) {
@@ -77,6 +85,7 @@ public class StorageEntitiesDaoImpl extends CommonDao implements StorageEntities
     }
 
     @Transactional
+    @Override
     public void importCSVFile(File file) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
         String line = null;

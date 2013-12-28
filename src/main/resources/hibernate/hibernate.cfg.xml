@@ -9,5 +9,7 @@
     <property name="hibernate.connection.username">SA</property>
     <mapping class="cz.moz.kuriovizor.domain.StoreEntity"/>
     <mapping class="cz.moz.kuriovizor.domain.Unit"/>
+    <mapping class="cz.moz.kuriovizor.domain.StoreEntity4Unit"/>
+    <mapping class="cz.moz.kuriovizor.domain.UnitEntities"/>
   </session-factory>
 </hibernate-configuration>

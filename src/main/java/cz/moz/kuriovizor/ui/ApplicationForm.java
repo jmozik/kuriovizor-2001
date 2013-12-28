@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -51,10 +52,15 @@ public class ApplicationForm extends javax.swing.JFrame {
     public void init() {
 //        getListCritical();
         initComponents();
-        initData();
+        try {
+            initData();
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Vznikl problém při připojení k databázi.", "Chyba...", JOptionPane.WARNING_MESSAGE);
+            Logger.getLogger(ApplicationForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
-    public void initData() {
+    public void initData() throws Exception {
         
         this.lblStorageEntriesCount.setText(String.valueOf(this.storeDao.getUnitsCount()));
         this.lblUnitsCount.setText(String.valueOf(unitsDao.getAllUnits().size()));
@@ -388,7 +394,7 @@ public class ApplicationForm extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void btnStorageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStorageActionPerformed
-       StoreForm form = new StoreForm(this, true);
+       ViewStoreDialog form = new ViewStoreDialog(this, true);
        form.initData(storeDao);
        form.setVisible(true);
     }//GEN-LAST:event_btnStorageActionPerformed
@@ -399,9 +405,21 @@ public class ApplicationForm extends javax.swing.JFrame {
         int returnVal = dialog.showOpenDialog(this);
         if(returnVal == JFileChooser.APPROVE_OPTION) {
             File file = dialog.getSelectedFile();
+            
+            String ext = file.getName().substring(file.getName().lastIndexOf(".") + 1);
             try {
-                this.storeDao.importCSVFile(file);
-                this.initData();
+                if(ext.equals("csv")) {
+                    this.storeDao.importCSVFile(file);
+                } else if(ext.equals("ods")) {
+                    System.out.println("Tady bude zpracovani ods souboru...");
+                    System.exit(0);
+                }
+                
+                try {
+                    this.initData();
+                } catch (Exception ex) {
+                    Logger.getLogger(ApplicationForm.class.getName()).log(Level.SEVERE, null, ex);
+                }
             } catch (IOException ex) {
                 Logger.getLogger(ApplicationForm.class.getName()).log(Level.SEVERE, null, ex);
             }

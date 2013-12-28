@@ -18,7 +18,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  *
  * @author moz
  */
-public class StoreForm extends javax.swing.JDialog implements ApplicationContextAware {
+public class ViewStoreDialog extends javax.swing.JDialog implements ApplicationContextAware {
 
     private ApplicationContext context;
     private StoreViewTableModel storageTableModel;
@@ -29,7 +29,7 @@ public class StoreForm extends javax.swing.JDialog implements ApplicationContext
     /**
      * Creates new form StoreForm
      */
-    public StoreForm(java.awt.Frame parent, boolean modal) {
+    public ViewStoreDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
     }
@@ -218,13 +218,13 @@ public class StoreForm extends javax.swing.JDialog implements ApplicationContext
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(StoreForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ViewStoreDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(StoreForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ViewStoreDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(StoreForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ViewStoreDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(StoreForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ViewStoreDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
@@ -234,7 +234,7 @@ public class StoreForm extends javax.swing.JDialog implements ApplicationContext
                 ApplicationContext con = new ClassPathXmlApplicationContext("spring/application-context.xml");
                 StorageEntitiesDao dao = con.getBean(StorageEntitiesDao.class);
 
-                StoreForm dialog = new StoreForm(new javax.swing.JFrame(), true);
+                ViewStoreDialog dialog = new ViewStoreDialog(new javax.swing.JFrame(), true);
                 dialog.initData(dao);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
