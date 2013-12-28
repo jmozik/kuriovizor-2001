@@ -102,5 +102,4 @@ public class StoreEntity implements Serializable {
         this.productName = product_name;
     }
     
-    
 }

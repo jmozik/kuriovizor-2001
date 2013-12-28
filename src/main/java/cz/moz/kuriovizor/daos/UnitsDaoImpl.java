@@ -7,6 +7,7 @@
 package cz.moz.kuriovizor.daos;
 
 import cz.moz.kuriovizor.domain.Unit;
+import cz.moz.kuriovizor.domain.UnitEntities;
 import java.util.List;
 import org.hibernate.Query;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,5 +30,21 @@ public class UnitsDaoImpl extends CommonDao implements UnitsDao {
         Query query = getSession().createQuery("from Unit");
         return query.list();
     }
+
+    @Transactional
+    @Override
+    public Unit getUnit(int id) {
+        Query query = getSession().createQuery("from Unit as u where u.id = '" + id + "'");
+        return (Unit)query.list().get(0);
+    }
+
+    @Transactional
+    @Override
+    public UnitEntities getConnection(int id) {
+        Query query = getSession().createQuery("from UnitEntities as u where u.id = '" + id + "'");
+        return (UnitEntities)query.list().get(0);
+    }
+    
+    
     
 }

@@ -7,6 +7,7 @@
 package cz.moz.kuriovizor.daos;
 
 import cz.moz.kuriovizor.domain.Unit;
+import cz.moz.kuriovizor.domain.UnitEntities;
 import java.util.List;
 
 /**
@@ -18,4 +19,8 @@ public interface UnitsDao {
     public void saveUnit(Unit unit);
     
     public List<Unit> getAllUnits();
+    
+    public Unit getUnit(int id);
+    
+    public UnitEntities getConnection(int id);
 }
