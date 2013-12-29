@@ -35,7 +35,7 @@ public class StorageEntitiesDaoImpl extends CommonDao implements StorageEntities
     public void saveEntity(StoreEntity entity) {
         getSession().save(entity);
     }
-    
+
     @Transactional
     @Override
     public void updateEntity(StoreEntity entity) {
@@ -46,7 +46,12 @@ public class StorageEntitiesDaoImpl extends CommonDao implements StorageEntities
     @Override
     public StoreEntity getEntity(int id) {
         Query query = getSession().createQuery("from StoreEntity as se where se.id = '" + id + "'");
-        return (StoreEntity) query.list().get(0);
+        List list = query.list();
+        if (list.size() > 0) {
+            return (StoreEntity) list.get(0);
+        } else {
+            return null;
+        }
     }
 
     @Transactional
@@ -55,7 +60,7 @@ public class StorageEntitiesDaoImpl extends CommonDao implements StorageEntities
         Query query = getSession().createQuery("from StoreEntity as se where se.count <= se.minCount");
         return query.list();
     }
-    
+
     @Transactional
     @Override
     public void deleteEntity(int id) {
@@ -123,14 +128,15 @@ public class StorageEntitiesDaoImpl extends CommonDao implements StorageEntities
             if (line[7].contains(",")) {
                 line[7] = line[7].replace(",", ".");
             }
-            if(line[7].contains(";"))
+            if (line[7].contains(";")) {
                 line[7] = line[7].replace(";", "");
+            }
             entity.setPrice(Float.valueOf(line[7]));
         }
 
         return entity;
     }
-    
+
     @Transactional
     public int getUnitsCount() {
         return getAllEntities().size();

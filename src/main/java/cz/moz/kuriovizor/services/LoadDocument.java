@@ -1,5 +1,6 @@
 package cz.moz.kuriovizor.services;
 
+import cz.moz.kuriovizor.daos.StorageEntitiesDao;
 import cz.moz.kuriovizor.domain.StoreEntity;
 import java.io.File;
 import java.io.IOException;
@@ -8,12 +9,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jopendocument.dom.spreadsheet.Sheet;
 import org.jopendocument.dom.spreadsheet.SpreadSheet;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class LoadDocument {
 
-    static File file = new File("c:/users/michal/desktop/inventarizace.ods");
+    @Autowired
+    private StorageEntitiesDao daoEntity;
 
-    public static Sheet importSheet(File file) {
+    public Sheet importSheet(File file) {
         Sheet mainSheet = null;
         try {
             SpreadSheet odsFile = SpreadSheet.createFromFile(file);
@@ -26,7 +29,7 @@ public class LoadDocument {
 
     }
 
-    public static void displaySheet(Sheet sheet) {
+    public void displaySheet(Sheet sheet) {
         int rowCount = sheet.getRowCount();
         int collumCount = sheet.getColumnCount();
         for (int row = 0; row < rowCount; row++) {
@@ -39,45 +42,33 @@ public class LoadDocument {
 
     }
 
-    public static Object getCellValue(Sheet sheet, int row, int collum, Object defaultValue) {
+    public Object getCellValue(Sheet sheet, int row, int collum, Object defaultValue) {
         try {
             Object cellValue = sheet.getCellAt(collum, row).getValue();
             if (cellValue instanceof String) {
-                if(!(defaultValue instanceof String)){
-                return defaultValue;
+                if (!(defaultValue instanceof String)) {
+                    return defaultValue;
+                } else {
+                    return (String) cellValue;
                 }
-                else
-                return (String) cellValue;
             } else if (cellValue instanceof BigDecimal) {
                 if (defaultValue instanceof Integer) {
                     return new Integer(((BigDecimal) cellValue).intValue());
                 } else if (defaultValue instanceof Float) {
                     return new Float(((BigDecimal) cellValue).floatValue());
-                } else
+                } else {
                     System.out.println("Jiny datovy typ: " + defaultValue.getClass().getName());
+                }
 
             }
 
             return sheet.getCellAt(collum, row).getValue();
-        } catch (ArrayIndexOutOfBoundsException e) {
+        } catch (IndexOutOfBoundsException e) {
             return defaultValue;
         }
     }
 
-    public static Object createStorageEntity(int id, String company, String name, int count, int critCount, String code, int delivery, int cost) {
-        StoreEntity storageEntity = new StoreEntity();
-        storageEntity.setId(id);
-        storageEntity.setCompany(company);
-        storageEntity.setProductName(name);
-        storageEntity.setMinCount(critCount);
-        storageEntity.setCode(code);
-        storageEntity.setCount(count);
-        storageEntity.setDelivery(delivery);
-        storageEntity.setPrice(cost);
-        return storageEntity;
-    }
-
-    public static StoreEntity createRowStorageEntity(Sheet sheet, int row) {
+    public StoreEntity createStorageEntity(Sheet sheet, int row) {
         StoreEntity storageEntity = new StoreEntity();
 
         int id = (int) getCellValue(sheet, row, 0, new Integer(0));
@@ -101,10 +92,38 @@ public class LoadDocument {
 
     }
 
-    public static void main(String args[]) {
-        Sheet importedSheet = importSheet(file);
-        //displaySheet(importedSheet);
-        StoreEntity entity = createRowStorageEntity(importedSheet, 1);
-        System.out.println(entity.getId() + " " + entity.getProductName() + " " + entity.getCode());
+    public void importEntities(Sheet sheet) {
+        int objectCount = sheet.getRowCount();
+        Boolean isInDat;
+        for (int i = 1; i < objectCount; i++) {
+            StoreEntity newEntity = createStorageEntity(sheet, i);
+            isInDat = isInDatabase(newEntity.getId());
+            if(isInDat == true){
+            daoEntity.updateEntity(newEntity);
+                System.out.println("Updating entity: " + newEntity.getProductName());
+            }
+            else{
+            daoEntity.saveEntity(newEntity);
+                System.out.println("Saving entity: " + newEntity.getProductName());
+
+                
+            }
+        }
     }
+
+    public Boolean isInDatabase(int id) {
+        if(daoEntity.getEntity(id) != null) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
+//    public static void main(String args[]) {
+//        Sheet importedSheet = importSheet(file);
+//        //displaySheet(importedSheet);
+//        StoreEntity entity = createRowStorageEntity(importedSheet, 1);
+//        System.out.println(entity.getId() + " " + entity.getProductName() + " " + entity.getCode());
+//    }
 }

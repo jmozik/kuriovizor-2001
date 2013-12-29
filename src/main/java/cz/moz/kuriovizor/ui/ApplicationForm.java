@@ -7,6 +7,7 @@ package cz.moz.kuriovizor.ui;
 
 import cz.moz.kuriovizor.daos.StorageEntitiesDao;
 import cz.moz.kuriovizor.daos.UnitsDao;
+import cz.moz.kuriovizor.services.LoadDocument;
 import cz.moz.kuriovizor.ui.sub.StoreEntriesListModel;
 import cz.moz.kuriovizor.ui.sub.StoreEntryListCellRenderer;
 import java.io.File;
@@ -38,6 +39,8 @@ public class ApplicationForm extends javax.swing.JFrame {
     private StorageEntitiesDao storeDao;
     @Autowired
     private UnitsDao unitsDao;
+    @Autowired
+    private LoadDocument loader;
     
     private StoreEntriesListModel listCritical;
 
@@ -411,8 +414,7 @@ public class ApplicationForm extends javax.swing.JFrame {
                 if(ext.equals("csv")) {
                     this.storeDao.importCSVFile(file);
                 } else if(ext.equals("ods")) {
-                    System.out.println("Tady bude zpracovani ods souboru...");
-                    System.exit(0);
+                    loader.importEntities(loader.importSheet(file));
                 }
                 
                 try {
