@@ -30,5 +30,7 @@
     <bean id="storageEntitiesDao" class="cz.moz.kuriovizor.daos.StorageEntitiesDaoImpl" />
     
     <bean id="unitsDao" class="cz.moz.kuriovizor.daos.UnitsDaoImpl" />
+    
+    <bean id="loadDocument" class="cz.moz.kuriovizor.services.LoadDocument"/>
 
 </beans>
