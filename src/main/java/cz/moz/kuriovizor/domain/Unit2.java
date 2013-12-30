@@ -6,11 +6,15 @@
 package cz.moz.kuriovizor.domain;
 
 import java.io.Serializable;
+import java.util.List;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -18,37 +22,34 @@ import javax.persistence.Table;
  * @author moz
  */
 @Entity
-@Table(name = "units")
-public class Unit implements Serializable {
+@Table(name = "UNITS")
+public class Unit2 implements Serializable {
+
+    private Integer id;
+    private String unitName;
+    private String code;
+    private List<ItemUnit> items;
+
+    public void setItems(List<ItemUnit> items) {
+        this.items = items;
+    }
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "pk.unit")
+    public List<ItemUnit> getItems() {
+        return items;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-    @Column(name = "unit_name")
-    private String unitName;
-    @Column(name = "code")
-    private String code;
-
-    public Unit() {
-    }
-
-    public Unit(String unitName, String code) {
-        this.unitName = unitName;
-        this.code = code;
-    }
-       
-    
-//    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "unitsList")
-//    private List<StoreEntity> entitiesList;
-        
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
+    @Column(name = "UNIT_NAME")
     public String getUnitName() {
         return unitName;
     }
@@ -57,6 +58,7 @@ public class Unit implements Serializable {
         this.unitName = unitName;
     }
 
+    @Column(name = "CODE")
     public String getCode() {
         return code;
     }
@@ -65,11 +67,4 @@ public class Unit implements Serializable {
         this.code = code;
     }
 
-//    public List<StoreEntity> getEntitiesList() {
-//        return entitiesList;
-//    }
-//
-//    public void setEntitiesList(List<StoreEntity> entitiesList) {
-//        this.entitiesList = entitiesList;
-//    }
 }

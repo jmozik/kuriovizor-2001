@@ -12,6 +12,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 
 /**
@@ -28,7 +29,7 @@ public class UnitEntities implements Serializable {
     private Integer unit_id;
     @Column(name = "STORAGE_ID")
     private Integer entity_id;
-    
+    @JoinColumn(table = "storage", referencedColumnName = "id")
     private StoreEntity entity;
 
     public Integer getId() {
@@ -53,6 +54,14 @@ public class UnitEntities implements Serializable {
 
     public void setEntity_id(Integer entity_id) {
         this.entity_id = entity_id;
+    }
+
+    public void setEntity(StoreEntity entity) {
+        this.entity = entity;
+    }
+
+    public StoreEntity getEntity() {
+        return entity;
     }
     
 }
