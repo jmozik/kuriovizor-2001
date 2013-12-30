@@ -6,13 +6,11 @@
 package cz.moz.kuriovizor.ui;
 
 import cz.moz.kuriovizor.daos.StorageEntitiesDao;
+import cz.moz.kuriovizor.daos.UnitsDao;
 import cz.moz.kuriovizor.domain.ItemUnit;
 import cz.moz.kuriovizor.domain.Unit2;
 import cz.moz.kuriovizor.ui.sub.UnitItemsViewTableModel;
-import cz.moz.kuriovizor.ui.sub.StoreEntriesListModel;
-import cz.moz.kuriovizor.ui.sub.UnitItemsListModel;
-import java.util.ArrayList;
-import java.util.List;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -21,7 +19,8 @@ import java.util.List;
 public class UnitDialog extends javax.swing.JDialog {
 
     private Unit2 unit;
-    private StorageEntitiesDao storeDao;
+//    private StorageEntitiesDao storeDao;
+    private UnitsDao unitsDao;
 
     public Unit2 getUnit() {
         if (this.unit == null) {
@@ -34,10 +33,13 @@ public class UnitDialog extends javax.swing.JDialog {
         this.unit = unit;
     }
 
-    public void setStoreDao(StorageEntitiesDao storeDao) {
-        this.storeDao = storeDao;
+//    public void setStoreDao(StorageEntitiesDao storeDao) {
+//        this.storeDao = storeDao;
+//    }
+    public void setUnitsDao(UnitsDao unitsDao) {
+        this.unitsDao = unitsDao;
     }
-    
+
     /**
      * Creates new form UnitDialog
      */
@@ -50,7 +52,7 @@ public class UnitDialog extends javax.swing.JDialog {
         txtId.setText(String.valueOf(getUnit().getId()));
         txtName.setText(getUnit().getUnitName());
         txtCode.setText(getUnit().getCode());
-        
+
 //        StoreEntriesListModel model = new StoreEntriesListModel();
 //        model.setList(this.storeDao.getAllEntities());
 //        lstItems.setModel(model);
@@ -58,16 +60,11 @@ public class UnitDialog extends javax.swing.JDialog {
 //        List<ItemUnit> unitItemsList = new ArrayList<ItemUnit>();
 //        unitItemsList.addAll(getUnit().getItems());
 //        getUnit().getItems()
-        
 //        UnitItemsListModel unitItemsModel = new UnitItemsListModel();
 //        unitItemsModel.setList(unitItemsList);
-        
 //        StoreEntriesListModel model2 = new StoreEntriesListModel();
 //        model2.setList(unitItemsModel);
 //        lstItems.setModel(unitItemsModel);
-        
-        
-        
         UnitItemsViewTableModel unitItemsViewTableModel = new UnitItemsViewTableModel();
         unitItemsViewTableModel.setList(getUnit().getItems());
         tblUnitItems.setModel(unitItemsViewTableModel);
@@ -99,6 +96,7 @@ public class UnitDialog extends javax.swing.JDialog {
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
+        btnEditCount = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         tblUnitItems = new javax.swing.JTable();
 
@@ -162,6 +160,13 @@ public class UnitDialog extends javax.swing.JDialog {
 
         jButton3.setText("clear");
 
+        btnEditCount.setText("Edit count");
+        btnEditCount.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditCountActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
@@ -169,9 +174,10 @@ public class UnitDialog extends javax.swing.JDialog {
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, 75, Short.MAX_VALUE)
+                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE)
                     .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnEditCount, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel6Layout.setVerticalGroup(
@@ -183,7 +189,8 @@ public class UnitDialog extends javax.swing.JDialog {
                 .addComponent(jButton2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton3)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnEditCount))
         );
 
         jPanel5.add(jPanel6, new java.awt.GridBagConstraints());
@@ -272,6 +279,24 @@ public class UnitDialog extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnEditCountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditCountActionPerformed
+        int index = tblUnitItems.convertRowIndexToModel(tblUnitItems.getSelectedRow());
+        if (index == - 1) {
+            System.out.println("Nebyl vybran zadny prvek.");
+        } else {
+            ItemUnit entity = getUnit().getItems().get(index);
+            String str = JOptionPane.showInputDialog(this, "Pocet: ", "", 1);
+            Integer newCount = Integer.valueOf(str);
+            System.out.println("Novy pocet je: " + str);
+            entity.setRequiredCount(newCount);
+            unitsDao.updateItemUnit(entity);
+            System.out.println("Jednotka byla ulozena");
+            UnitItemsViewTableModel unitItemsViewTableModel = new UnitItemsViewTableModel();
+            unitItemsViewTableModel.setList(getUnit().getItems());
+            tblUnitItems.setModel(unitItemsViewTableModel);
+        }
+    }//GEN-LAST:event_btnEditCountActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -315,6 +340,7 @@ public class UnitDialog extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnEditCount;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;

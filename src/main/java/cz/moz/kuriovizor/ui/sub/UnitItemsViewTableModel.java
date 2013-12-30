@@ -26,7 +26,10 @@ public class UnitItemsViewTableModel extends AbstractTableModel {
     
     @Override
     public int getRowCount() {
-       return list.size();
+       if(list != null)
+        return list.size();
+       else
+        return 0;
     }
 
     @Override

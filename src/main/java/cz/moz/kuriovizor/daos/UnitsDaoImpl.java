@@ -6,6 +6,7 @@
 
 package cz.moz.kuriovizor.daos;
 
+import cz.moz.kuriovizor.domain.ItemUnit;
 import cz.moz.kuriovizor.domain.Unit;
 import cz.moz.kuriovizor.domain.Unit2;
 import cz.moz.kuriovizor.domain.UnitEntities;
@@ -21,8 +22,9 @@ public class UnitsDaoImpl extends CommonDao implements UnitsDao {
 
     @Transactional
     @Override
-    public void saveUnit(Unit unit) {
-        getSession().save(unit);
+    public void saveUnit(Unit2 unit) {
+//        getSession().save(unit);
+        getSession().saveOrUpdate(unit);
     }
 
     @Transactional
@@ -50,7 +52,16 @@ public class UnitsDaoImpl extends CommonDao implements UnitsDao {
     @Override
     public Unit2 getUnit2(int id) {
         Query query = getSession().createQuery("from Unit2 as u where u.id = '" + id + "'");
-        return (Unit2)query.list().get(0);
+        List list = query.list();
+        if(list.size() > 0)
+        return (Unit2)list.get(0);
+        else
+        return null;    
+    }
+    @Transactional
+    @Override
+    public void updateItemUnit(ItemUnit itemUnit) {
+        getSession().update(itemUnit);
     }
     
     

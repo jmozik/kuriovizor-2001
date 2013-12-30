@@ -25,10 +25,10 @@ public class Test {
         ApplicationContext con = new ClassPathXmlApplicationContext("spring/application-context.xml");
         UnitsDao unitsDao = con.getBean(UnitsDao.class);
                                 
-        unitsDao.saveUnit(new Unit("HWE 14", "HWE14"));
-        unitsDao.saveUnit(new Unit("HW 14", "HW14"));
-        unitsDao.saveUnit(new Unit("HWE 23", "HWE23"));
-        unitsDao.saveUnit(new Unit("HW 23", "HW23"));
+//        unitsDao.saveUnit(new Unit("HWE 14", "HWE14"));
+//        unitsDao.saveUnit(new Unit("HW 14", "HW14"));
+//        unitsDao.saveUnit(new Unit("HWE 23", "HWE23"));
+//        unitsDao.saveUnit(new Unit("HW 23", "HW23"));
     }
     
     public void test_01() {
@@ -60,7 +60,7 @@ public class Test {
 //        }
 
         UnitDialog dialog = new UnitDialog(new javax.swing.JFrame(), true);
-        dialog.setStoreDao(entitiesDao);
+        dialog.setUnitsDao(unitsDao);
         dialog.setUnit(u);
         dialog.initData();
         dialog.addWindowListener(new java.awt.event.WindowAdapter() {
