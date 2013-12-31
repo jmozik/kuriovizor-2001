@@ -4,17 +4,17 @@
  * and open the template in the editor.
  */
 
-package cz.moz.kuriovizor;
+package cz.moz.kuriovizor.daos;
+
+import cz.moz.kuriovizor.domain.Item;
+import java.util.List;
 
 /**
  *
  * @author moz
  */
-public class MyExceptionHandler extends Throwable {
+public interface ItemsDao {
     
-    public void handleException() {
-        System.out.println("e");
-    }
-   
-       
+    public List<Item> getAllItems();
+    
 }

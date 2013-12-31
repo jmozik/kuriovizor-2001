@@ -5,13 +5,14 @@
  */
 package cz.moz.kuriovizor;
 
+import cz.moz.kuriovizor.daos.ItemsDao;
 import cz.moz.kuriovizor.daos.StorageEntitiesDao;
 import cz.moz.kuriovizor.daos.UnitsDao;
 import cz.moz.kuriovizor.domain.ItemUnit;
 import cz.moz.kuriovizor.domain.StoreEntity;
-import cz.moz.kuriovizor.domain.Unit;
 import cz.moz.kuriovizor.domain.Unit2;
 import cz.moz.kuriovizor.ui.UnitDialog;
+import javax.swing.JDialog;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -85,9 +86,38 @@ public class Test {
             }
         }
     }
+    
+    public void test_03() {
+        ApplicationContext con = new ClassPathXmlApplicationContext("spring/application-context.xml");
+        ItemsDao itemsDao = con.getBean(ItemsDao.class);
+        UnitsDao unitsDao = con.getBean(UnitsDao.class);
+        Unit2 u = unitsDao.getUnit2(1);
+        
+        UnitDialog dialog = createDialog();
+        dialog.setUnitsDao(unitsDao);
+        dialog.setItemsDao(itemsDao);
+        
+        dialog.setUnit(u);
+        dialog.initData();
+        dialog.setVisible(true);
+        
+        
+        System.out.println("pocet prvku v db: " + itemsDao.getAllItems().size());
+    }
 
     public static void main(String[] args) {
-        new Test().test_01();
+        new Test().test_03();
+    }
+    
+    private UnitDialog createDialog() {
+        UnitDialog dialog = new UnitDialog(new javax.swing.JFrame(), true);
+        dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent e) {
+                System.exit(0);
+            }
+        });
+        return dialog;
     }
 
 }

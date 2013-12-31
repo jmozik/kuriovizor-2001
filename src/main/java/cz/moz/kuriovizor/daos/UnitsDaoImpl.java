@@ -63,6 +63,18 @@ public class UnitsDaoImpl extends CommonDao implements UnitsDao {
     public void updateItemUnit(ItemUnit itemUnit) {
         getSession().update(itemUnit);
     }
+
+    @Transactional
+    @Override
+    public void saveItemUnit(ItemUnit itemUnit) {
+        getSession().saveOrUpdate(itemUnit);
+    }
+
+    @Transactional
+    @Override
+    public void deleteItemUnit(ItemUnit itemUnit) {
+        getSession().delete(itemUnit);
+    }
     
     
     

@@ -27,11 +27,22 @@ import javax.persistence.Transient;
 public class ItemUnit implements Serializable {
 
     private ItemUnitId pk = new ItemUnitId();
+//    private Integer id;
     private Integer requiredCount;
 
     public ItemUnit() {
     }
-    
+
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    public Integer getId() {
+//        return id;
+//    }
+//
+//    public void setId(Integer id) {
+//        this.id = id;
+//    }
+        
     @EmbeddedId
     public ItemUnitId getPk() {
         return pk;

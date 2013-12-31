@@ -30,5 +30,9 @@ public interface UnitsDao {
     
     public void updateItemUnit(ItemUnit itemUnit);
     
+    public void saveItemUnit(ItemUnit itemUnit);
+    
+    public void deleteItemUnit(ItemUnit itemUnit);
+    
     public UnitEntities getConnection(int id);
 }
