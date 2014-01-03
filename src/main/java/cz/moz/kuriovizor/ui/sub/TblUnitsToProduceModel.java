@@ -6,7 +6,8 @@
 
 package cz.moz.kuriovizor.ui.sub;
 
-import cz.moz.kuriovizor.domain.Unit;
+import cz.moz.kuriovizor.domain.UnitToProduce;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
 
@@ -14,25 +15,26 @@ import javax.swing.table.AbstractTableModel;
  *
  * @author moz
  */
-public class UnitViewTableModel extends AbstractTableModel {
-    private List<Unit> data;
-    private int rowCount = 0;
+public class TblUnitsToProduceModel extends AbstractTableModel {
+    private List<UnitToProduce> list;
     private int colCount = 3;
-    private String[] columnNames = new String[]{
-        "Id", "Name", "Code"
+    private final String[] columnNames = new String[]{
+        "Id", "Name", "Quantity"
     };
 
-    public void setData(List<Unit> data) {
-        this.data = data;
+    public TblUnitsToProduceModel(List<UnitToProduce> list) {
+        this.list = list;
     }
 
-    public List<Unit> getData() {
-        return data;
+    public List<UnitToProduce> getList() {
+        if(list == null)
+            this.list = new ArrayList<UnitToProduce>();
+        return list;
     }
     
     @Override
     public int getRowCount() {
-        return this.data.size();
+        return getList().size();
     }
 
     @Override
@@ -42,17 +44,17 @@ public class UnitViewTableModel extends AbstractTableModel {
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        Unit unit = data.get(rowIndex);
+        UnitToProduce u2p = list.get(rowIndex);
         Object obj = null;
         switch (columnIndex) {
             case 0:
-                obj = (Object) unit.getId();
+                obj = (Object) u2p.getUnit().getId();
                 break;
             case 1:
-                obj = (Object) unit.getUnitName();
+                obj = (Object) u2p.getUnit().getUnitName();
                 break;
             case 2:
-                obj = (Object) unit.getCode();
+                obj = (Object) u2p.getCount();
                 break;
             default:
                 obj = (Object) new String("-");
@@ -61,7 +63,7 @@ public class UnitViewTableModel extends AbstractTableModel {
         return obj;
     }
     
-     @Override
+    @Override
     public String getColumnName(int column) {
         return this.columnNames[column];
     }

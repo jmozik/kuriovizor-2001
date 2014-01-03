@@ -57,7 +57,7 @@ public class StorageEntitiesDaoImpl extends CommonDao implements StorageEntities
     @Transactional
     @Override
     public List<StoreEntity> getCriticalEntries() {
-        Query query = getSession().createQuery("from StoreEntity as se where se.count <= se.minCount");
+        Query query = getSession().createQuery("from StoreEntity as se where se.count <= se.minCount and se.minCount != '0'");
         return query.list();
     }
 

@@ -22,7 +22,7 @@ public interface UnitsDao {
     
     public void saveUnit(Unit2 unit);
     
-    public List<Unit> getAllUnits();
+    public List<Unit2> getAllUnits();
     
     public Unit getUnit(int id);
     
@@ -35,4 +35,8 @@ public interface UnitsDao {
     public void deleteItemUnit(ItemUnit itemUnit);
     
     public UnitEntities getConnection(int id);
+    
+    public void deleteUnit(Unit2 unit);
+    
+    public void writeUnitOff(Unit2 unit, int count, String outDir);
 }

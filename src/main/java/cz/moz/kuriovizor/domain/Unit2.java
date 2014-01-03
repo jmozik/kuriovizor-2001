@@ -7,7 +7,6 @@ package cz.moz.kuriovizor.domain;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -16,6 +15,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  *
@@ -27,7 +27,7 @@ public class Unit2 implements Serializable {
 
     private Integer id;
     private String unitName;
-    private String code;
+//    private String code;
     private List<ItemUnit> items;
 
     public void setItems(List<ItemUnit> items) {
@@ -49,7 +49,7 @@ public class Unit2 implements Serializable {
         this.id = id;
     }
 
-    @Column(name = "UNIT_NAME")
+    @Column(name = "UNIT_NAME", nullable = false)
     public String getUnitName() {
         return unitName;
     }
@@ -58,13 +58,43 @@ public class Unit2 implements Serializable {
         this.unitName = unitName;
     }
 
-    @Column(name = "CODE")
-    public String getCode() {
-        return code;
-    }
+//    @Column(name = "CODE")
+//    public String getCode() {
+//        return code;
+//    }
+//
+//    public void setCode(String code) {
+//        this.code = code;
+//    }
 
-    public void setCode(String code) {
-        this.code = code;
+    @Transient
+    public boolean isAvailable() {
+        for (ItemUnit itemUnit : getItems()) {
+            if (itemUnit.getItem().getCount() < itemUnit.getRequiredCount()) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    @Transient
+    public int getAvailableCount() {
+        if(getItems().isEmpty())
+            return -1;
+        
+        int[] availableCounts = new int[getItems().size()];
+        for (int i = 0; i < getItems().size(); i++) {
+            ItemUnit itemUnit = getItems().get(i);
+            availableCounts[i] = itemUnit.getItem().getCount() / itemUnit.getRequiredCount();
+        }
+        
+        int minCount = availableCounts[0];
+        for(int count : availableCounts) {
+            if(count < minCount)
+                minCount = count;
+        }
+        
+        return minCount;
     }
 
 }

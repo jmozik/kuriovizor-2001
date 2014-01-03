@@ -16,9 +16,16 @@ import javax.swing.table.AbstractTableModel;
  */
 public class UnitItemsViewTableModel extends AbstractTableModel {
     private List<ItemUnit> list;
-    private String[] columnNames = new String[]{
-        "Name", "Required count"
+    private final String[] columnNames = new String[]{
+        "Id", "Name", "Req. count"
     };
+
+    public UnitItemsViewTableModel() {
+    }
+    
+    public UnitItemsViewTableModel(List<ItemUnit> list) {
+        this.list = list;
+    }
 
     public void setList(List<ItemUnit> list) {
         this.list = list;
@@ -34,7 +41,7 @@ public class UnitItemsViewTableModel extends AbstractTableModel {
 
     @Override
     public int getColumnCount() {
-        return 2;
+        return 3;
     }
 
     @Override
@@ -43,9 +50,12 @@ public class UnitItemsViewTableModel extends AbstractTableModel {
         Object obj = null;
          switch (columnIndex) {
              case 0:
-                 obj = (Object) item.getItem().getProductName();
+                 obj = (Object) item.getItem().getId();
                  break;
              case 1:
+                 obj = (Object) item.getItem().getProductName();
+                 break;    
+             case 2:
                  obj = (Object) item.getRequiredCount();
                  break;
          }

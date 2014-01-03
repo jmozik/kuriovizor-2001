@@ -16,7 +16,7 @@ import javax.swing.JList;
  *
  * @author moz
  */
-public class StoreEntryListCellRenderer extends DefaultListCellRenderer {
+public class LstCriticalItemsCellRenderer extends DefaultListCellRenderer {
 
     @Override
     public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {

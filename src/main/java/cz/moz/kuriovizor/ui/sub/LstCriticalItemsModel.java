@@ -16,11 +16,15 @@ import javax.swing.AbstractListModel;
  *
  * @author moz
  */
-public class StoreEntriesListModel extends AbstractListModel<StoreEntity> {
+public class LstCriticalItemsModel extends AbstractListModel<StoreEntity> {
     private List<StoreEntity> list;
 
-    public StoreEntriesListModel() {
+    public LstCriticalItemsModel() {
         this.list = new ArrayList<>();
+    }
+    
+    public LstCriticalItemsModel(List<StoreEntity> list) {
+        this.list = list;
     }
 
     public void setList(List<StoreEntity> list) {

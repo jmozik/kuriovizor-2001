@@ -7,7 +7,7 @@
 package cz.moz.kuriovizor.ui;
 
 import cz.moz.kuriovizor.daos.UnitsDao;
-import cz.moz.kuriovizor.ui.sub.UnitViewTableModel;
+import cz.moz.kuriovizor.ui.sub.TblUnitsTableModel;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -31,7 +31,7 @@ public class ViewUnitsDialog extends javax.swing.JDialog {
     }
     
     public void initData() {
-        UnitViewTableModel model = new UnitViewTableModel();
+        TblUnitsTableModel model = new TblUnitsTableModel();
         model.setData(this.unitsDao.getAllUnits());
         viewUnits.setModel(model);
     }

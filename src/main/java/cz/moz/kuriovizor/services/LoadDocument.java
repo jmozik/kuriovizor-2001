@@ -21,6 +21,7 @@ public class LoadDocument {
         try {
             SpreadSheet odsFile = SpreadSheet.createFromFile(file);
             mainSheet = odsFile.getSheet("Sheet1");
+            System.out.println("rouws count: " + mainSheet.getRowCount());
             System.out.println("File has been imported");
         } catch (IOException ex) {
             Logger.getLogger(LoadDocument.class.getName()).log(Level.SEVERE, null, ex);
@@ -56,6 +57,8 @@ public class LoadDocument {
                     return new Integer(((BigDecimal) cellValue).intValue());
                 } else if (defaultValue instanceof Float) {
                     return new Float(((BigDecimal) cellValue).floatValue());
+                } else if(defaultValue instanceof String) {
+                    return ((BigDecimal)cellValue).toString();
                 } else {
                     System.out.println("Jiny datovy typ: " + defaultValue.getClass().getName());
                 }

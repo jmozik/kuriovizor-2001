@@ -32,6 +32,13 @@ public class ItemUnit implements Serializable {
 
     public ItemUnit() {
     }
+    
+    @SuppressWarnings("empty-statement")
+    public ItemUnit(Item item, Unit2 unit, int requiredCount) {
+        this.pk.setItem(item);
+        this.pk.setUnit(unit);
+        this.requiredCount = requiredCount;
+    }
 
 //    @Id
 //    @GeneratedValue(strategy = GenerationType.IDENTITY)

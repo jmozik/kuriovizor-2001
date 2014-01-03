@@ -23,7 +23,9 @@
     
     <bean id="formUnit" class="cz.moz.stman.ui.UnitForm" />-->
     
-    <bean id="formAppl" class="cz.moz.kuriovizor.ui.ApplicationForm" />
+    <bean id="formAppl" class="cz.moz.kuriovizor.ui.ApplicationForm2" />
+    
+    <bean id="appContext" class="cz.moz.kuriovizor.domain.ApplContext" />
     
     <!--<bean id="formStore" class="cz.moz.kuriovizor.ui.StoreForm" />-->
             

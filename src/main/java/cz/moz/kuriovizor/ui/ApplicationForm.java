@@ -5,21 +5,27 @@
  */
 package cz.moz.kuriovizor.ui;
 
+import cz.moz.kuriovizor.daos.ItemsDao;
 import cz.moz.kuriovizor.daos.StorageEntitiesDao;
 import cz.moz.kuriovizor.daos.UnitsDao;
+import cz.moz.kuriovizor.domain.Unit2;
 import cz.moz.kuriovizor.services.LoadDocument;
-import cz.moz.kuriovizor.ui.sub.StoreEntriesListModel;
-import cz.moz.kuriovizor.ui.sub.StoreEntryListCellRenderer;
+import cz.moz.kuriovizor.ui.sub.LstUnitsCellRenderer;
+import cz.moz.kuriovizor.ui.sub.LstUnitsModel;
+import cz.moz.kuriovizor.ui.sub.LstCriticalItemsModel;
+import cz.moz.kuriovizor.ui.sub.LstCriticalItemsCellRenderer;
+import cz.moz.kuriovizor.ui.sub.TblUnitsTableModel;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 //import cz.moz.stman.daos.UnitsDao;
 //import cz.moz.stman.domain.UnitEntry;
-
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -34,21 +40,22 @@ public class ApplicationForm extends javax.swing.JFrame {
 //    private UnitsDao unitsDao;
 //    @Autowired
 //    private UnitForm unitForm;
-
     @Autowired
     private StorageEntitiesDao storeDao;
     @Autowired
     private UnitsDao unitsDao;
     @Autowired
+    private ItemsDao itemsDao;
+    @Autowired
     private LoadDocument loader;
-    
-    private StoreEntriesListModel listCritical;
+
+    private LstCriticalItemsModel listCritical;
 
     /**
      * Creates new form Application
      */
     public ApplicationForm() {
-        this.listCritical = new StoreEntriesListModel();
+        this.listCritical = new LstCriticalItemsModel();
 //        initComponents();
     }
 
@@ -62,23 +69,24 @@ public class ApplicationForm extends javax.swing.JFrame {
             Logger.getLogger(ApplicationForm.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     public void initData() throws Exception {
-        
+        List<Unit2> listUnits = unitsDao.getAllUnits();
+
         this.lblStorageEntriesCount.setText(String.valueOf(this.storeDao.getUnitsCount()));
-        this.lblUnitsCount.setText(String.valueOf(unitsDao.getAllUnits().size()));
+        this.lblUnitsCount.setText(String.valueOf(listUnits.size()));
         this.lblCritical.setText(String.valueOf(this.storeDao.getCriticalEntries().size()));
-    
-        StoreEntriesListModel seModel = new StoreEntriesListModel();
-        seModel.setList(storeDao.getCriticalEntries());
+
+        this.lstCriticalEntities.setModel(new LstCriticalItemsModel(storeDao.getCriticalEntries()));
+        lstUnits.setModel(new LstUnitsModel(listUnits));
         
-        this.lstCriticalEntities.setModel(seModel);
-        
-        System.out.println("critical: " + storeDao.getCriticalEntries().size());
-        
+        tblUnits.setModel(new TblUnitsTableModel(unitsDao.getAllUnits()));
+        tblUnits.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        tblUnits.getColumnModel().getColumn(0).setPreferredWidth(27);
+
     }
 
-    public StoreEntriesListModel getListCritical() {
+    public LstCriticalItemsModel getListCritical() {
 //        if(this.listCritical == null) {
 //            List<StorageEntity> store = this.storeDao.loadStoreEntries();
 //            List<StorageEntity> critical = new ArrayList<>();
@@ -86,14 +94,14 @@ public class ApplicationForm extends javax.swing.JFrame {
 //                if(entry.getCount() < 5)
 //                    critical.add(entry);
 //            }
-//            this.listCritical = new StoreEntriesListModel();
+//            this.listCritical = new LstCriticalItemsModel();
 //            this.listCritical.setList(critical);
 //        }
 
         if (this.listCritical == null) {
-            this.listCritical = new StoreEntriesListModel();
+            this.listCritical = new LstCriticalItemsModel();
             this.listCritical.setList(storeDao.getCriticalEntries());
-                        
+
         }
         return this.listCritical;
     }
@@ -107,6 +115,7 @@ public class ApplicationForm extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel3 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
@@ -116,6 +125,7 @@ public class ApplicationForm extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         lstCriticalEntities = new javax.swing.JList();
         lblCritical = new javax.swing.JLabel();
+        jButton3 = new javax.swing.JButton();
         btnStorage = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
@@ -123,6 +133,12 @@ public class ApplicationForm extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         lstUnits = new javax.swing.JList();
+        btnAddUnit = new javax.swing.JButton();
+        btnEditUnit = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
+        jButton5 = new javax.swing.JButton();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        tblUnits = new javax.swing.JTable();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         openMenuItem = new javax.swing.JMenuItem();
@@ -141,6 +157,17 @@ public class ApplicationForm extends javax.swing.JFrame {
         helpMenu = new javax.swing.JMenu();
         contentsMenuItem = new javax.swing.JMenuItem();
         aboutMenuItem = new javax.swing.JMenuItem();
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -166,11 +193,18 @@ public class ApplicationForm extends javax.swing.JFrame {
 
         lstCriticalEntities.setModel(this.listCritical);
         lstCriticalEntities.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        lstCriticalEntities.setCellRenderer(new StoreEntryListCellRenderer());
+        lstCriticalEntities.setCellRenderer(new LstCriticalItemsCellRenderer());
         jScrollPane1.setViewportView(lstCriticalEntities);
 
         lblCritical.setText(String.valueOf(this.getListCritical().getSize()));
         lblCritical.setAutoscrolls(true);
+
+        jButton3.setText("r");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -190,13 +224,17 @@ public class ApplicationForm extends javax.swing.JFrame {
                                 .addComponent(jLabel3)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(lblCritical)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jButton3)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
+                .addComponent(jButton3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lblStorageEntriesCount, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -229,7 +267,24 @@ public class ApplicationForm extends javax.swing.JFrame {
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
+        lstUnits.setCellRenderer(new LstUnitsCellRenderer());
         jScrollPane2.setViewportView(lstUnits);
+
+        btnAddUnit.setText("+");
+        btnAddUnit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddUnitActionPerformed(evt);
+            }
+        });
+
+        btnEditUnit.setText("edit");
+        btnEditUnit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditUnitActionPerformed(evt);
+            }
+        });
+
+        jButton4.setText("-");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -240,13 +295,18 @@ public class ApplicationForm extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane2)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(jLabel5)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(lblUnitsCount))
-                            .addComponent(jLabel7))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addComponent(jLabel5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(lblUnitsCount)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel7)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnAddUnit)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnEditUnit)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton4)))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -257,11 +317,44 @@ public class ApplicationForm extends javax.swing.JFrame {
                     .addComponent(jLabel5)
                     .addComponent(lblUnitsCount))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel7)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel7)
+                    .addComponent(btnAddUnit)
+                    .addComponent(btnEditUnit)
+                    .addComponent(jButton4))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 249, Short.MAX_VALUE)
                 .addContainerGap())
         );
+
+        jButton5.setText("Přehled jednotek");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
+
+        tblUnits.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Id", "Name", "Code"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
+        tblUnits.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
+        jScrollPane3.setViewportView(tblUnits);
+        if (tblUnits.getColumnModel().getColumnCount() > 0) {
+            tblUnits.getColumnModel().getColumn(1).setPreferredWidth(200);
+        }
 
         fileMenu.setMnemonic('f');
         fileMenu.setText("File");
@@ -344,35 +437,45 @@ public class ApplicationForm extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addComponent(btnStorage))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(btnStorage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                        .addGap(187, 187, 187)))
+                                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(jButton2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jButton5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 313, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(228, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
-                .addComponent(btnStorage)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(39, 39, 39)
+                        .addComponent(btnStorage)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton1))
+                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton2)
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 92, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
@@ -397,26 +500,26 @@ public class ApplicationForm extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void btnStorageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStorageActionPerformed
-       ViewStoreDialog form = new ViewStoreDialog(this, true);
-       form.initData(storeDao);
-       form.setVisible(true);
+        ViewStoreDialog form = new ViewStoreDialog(this, true);
+        form.initData(storeDao);
+        form.setVisible(true);
     }//GEN-LAST:event_btnStorageActionPerformed
 
     private void importMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importMenuItemActionPerformed
-       System.out.println("evt.getID(): " + evt.getID());
+        System.out.println("evt.getID(): " + evt.getID());
         JFileChooser dialog = new JFileChooser();
         int returnVal = dialog.showOpenDialog(this);
-        if(returnVal == JFileChooser.APPROVE_OPTION) {
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = dialog.getSelectedFile();
-            
+
             String ext = file.getName().substring(file.getName().lastIndexOf(".") + 1);
             try {
-                if(ext.equals("csv")) {
+                if (ext.equals("csv")) {
                     this.storeDao.importCSVFile(file);
-                } else if(ext.equals("ods")) {
+                } else if (ext.equals("ods")) {
                     loader.importEntities(loader.importSheet(file));
                 }
-                
+
                 try {
                     this.initData();
                 } catch (Exception ex) {
@@ -427,6 +530,46 @@ public class ApplicationForm extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_importMenuItemActionPerformed
+
+    private void btnAddUnitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddUnitActionPerformed
+        UnitDialog dialog = new UnitDialog(this, true);
+        dialog.setItemsDao(this.itemsDao);
+        dialog.setUnitsDao(unitsDao);
+        dialog.setAction(UnitDialog.Action.CREATE);
+        dialog.initData();
+
+        dialog.setVisible(true);
+
+        this.lstUnits.setModel(new LstUnitsModel(unitsDao.getAllUnits()));
+    }//GEN-LAST:event_btnAddUnitActionPerformed
+
+    private void btnEditUnitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditUnitActionPerformed
+        if (lstUnits.getSelectedIndex() > -1) {
+            Object object = lstUnits.getSelectedValue();
+            if (object instanceof Unit2) {
+                UnitDialog dialog = new UnitDialog(this, true);
+                dialog.setAction(UnitDialog.Action.UPDATE);
+                dialog.setUnitsDao(unitsDao);
+                dialog.setItemsDao(itemsDao);
+                dialog.setUnit((Unit2) object);
+                dialog.initData();
+                dialog.setVisible(true);
+
+                this.lstUnits.setModel(new LstUnitsModel(unitsDao.getAllUnits()));
+            }
+        }
+    }//GEN-LAST:event_btnEditUnitActionPerformed
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        ViewUnitsDialog viewUnits = new ViewUnitsDialog(this, true);
+        viewUnits.setUnitsDao(unitsDao);
+        viewUnits.initData();
+        viewUnits.setVisible(true);
+    }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        lstCriticalEntities.setModel(new LstCriticalItemsModel(this.storeDao.getCriticalEntries()));
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -465,6 +608,8 @@ public class ApplicationForm extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem aboutMenuItem;
+    private javax.swing.JButton btnAddUnit;
+    private javax.swing.JButton btnEditUnit;
     private javax.swing.JButton btnStorage;
     private javax.swing.JMenuItem contentsMenuItem;
     private javax.swing.JMenuItem copyMenuItem;
@@ -477,6 +622,9 @@ public class ApplicationForm extends javax.swing.JFrame {
     private javax.swing.JMenuItem importMenuItem;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;
@@ -484,8 +632,10 @@ public class ApplicationForm extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JLabel lblCritical;
@@ -498,6 +648,7 @@ public class ApplicationForm extends javax.swing.JFrame {
     private javax.swing.JMenuItem pasteMenuItem;
     private javax.swing.JMenuItem saveAsMenuItem;
     private javax.swing.JMenuItem saveMenuItem;
+    private javax.swing.JTable tblUnits;
     // End of variables declaration//GEN-END:variables
 
 }

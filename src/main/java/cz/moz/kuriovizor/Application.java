@@ -3,56 +3,65 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package cz.moz.kuriovizor;
 
-import cz.moz.kuriovizor.ui.ApplicationForm;
+import cz.moz.kuriovizor.domain.ApplContext;
+import cz.moz.kuriovizor.ui.ApplicationForm2;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Properties;
+import javax.swing.JOptionPane;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-
+import sun.awt.AppContext;
 
 /**
  *
  * @author moz
  */
 public class Application {
-    
-    public static void main(String[] args) {
-        
-//        org.hsqldb.Server.main(new String[]{"-database.0", "file:databases/kuriovizor-db", "-dbname.0", "kuriovizor-db"});
+
+    private final String propertyFileName = "conf.properties";
+
+    public void run() throws IOException {
+        Properties conf = loadProperties();
+        if(conf == null) {
+            return;
+        }
         
         ApplicationContext appContext = new ClassPathXmlApplicationContext("spring/application-context.xml");
         
-//        StorageEntitiesDao dao =  appContext.getBean(StorageEntitiesDao.class);
-        
-        ApplicationForm mainForm = appContext.getBean(ApplicationForm.class);
+        ApplContext ac = appContext.getBean(ApplContext.class);
+        ac.setProductionReportsDirectory(conf.getProperty("reportsDirectory"));
+
+        ApplicationForm2 mainForm = appContext.getBean(ApplicationForm2.class);
+        mainForm.setTitle("KurioVizor - 2001");
         mainForm.init();
+        mainForm.setLocationRelativeTo(null);
         mainForm.setVisible(true);
-        
-//        StorageEntity s = new StorageEntity();
-//        s.setProductName("Hliníková lišta dveří, délka 1450mm");
-//        s.setCount(22);
-//        
-////        dao.saveEntity(s);
-//        
-//        System.out.println("count: " + dao.getAllEntities().size());
-//        
-//        StorageEntity se = dao.getEntity(4);
-//        System.out.println("nalezena entita: " + se.getProductName() + " pocet: " + se.getCount());
-//        
-//        System.out.println("pokus o odecteni kusu: " + dao.substractEntityCount(2, 2));
-//        
-//        List<StorageEntity> listCritical = dao.getCriticalEntries();
-//        for(StorageEntity entity : listCritical) {
-//            System.out.println("Id: " + entity.getId() + " - " + entity.getProductName() + "; requ.: " + entity.getMinCount() + " actual: " + entity.getCount());
-//        }
-        
-//        File file = new File("C:\\Users\\moz\\Desktop\\Emil\\inventarizace.csv");
-//        try {
-//            dao.importCSVFile(file);
-//        } catch (IOException ex) {
-//            Logger.getLogger(Application.class.getName()).log(Level.SEVERE, null, ex);
-//        }
     }
-    
+
+    private Properties loadProperties() throws IOException {
+        File file = new File(propertyFileName);
+        if (!file.exists()) {
+            
+            Properties conf = new Properties();
+            conf.setProperty("reportsDirectory", "");
+            conf.store(new FileOutputStream(file), "created new property file");
+            
+            JOptionPane.showMessageDialog(null, "Put data to configuration file: " + file.getAbsolutePath(), "Missing properties file", JOptionPane.ERROR_MESSAGE);
+            return null;
+        } else {
+            Properties conf = new Properties();
+            conf.load(new FileInputStream(file));
+            return conf;
+        }
+    }
+
+    public static void main(String[] args) throws IOException {
+        new Application().run();
+    }
+
 }
