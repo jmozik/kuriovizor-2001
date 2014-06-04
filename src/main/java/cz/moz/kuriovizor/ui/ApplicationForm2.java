@@ -17,6 +17,8 @@ import cz.moz.kuriovizor.ui.sub.LstCriticalItemsModel;
 import cz.moz.kuriovizor.ui.sub.TblUnitsTableModel;
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 //import cz.moz.stman.daos.UnitsDao;
@@ -47,7 +49,7 @@ public class ApplicationForm2 extends javax.swing.JFrame {
     private ItemsDao itemsDao;
     @Autowired
     private LoadDocument loader;
-    
+
     @Autowired
     private ApplContext ac;
 
@@ -605,9 +607,23 @@ public class ApplicationForm2 extends javax.swing.JFrame {
                         JOptionPane.showMessageDialog(this, "Only  " + unit.getAvailableCount() + " units is available to produce. ", "Invalid Quantity", JOptionPane.ERROR_MESSAGE);
                         return;
                     }
+
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd_HH_mm_ss");
+                    File file = new File(this.ac.getProductionReportsDirectory() + sdf.format(new Date()) + "-" + unit.getUnitName());
+                    if (!file.exists()) {
+                        try {
+                            file.createNewFile();
+                            unitsDao.writeUnitOff(unit, intCount, file);
+                        } catch (IOException ex) {
+                            JOptionPane.showMessageDialog(this, "Can't create report file " + file.getAbsolutePath(), "Saving report error", JOptionPane.ERROR_MESSAGE);
+                            return;
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Can't create report file with same name: " + file.getAbsolutePath(), "Saving report error", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
                     
-                    unitsDao.writeUnitOff(unit, intCount, ac.getProductionReportsDirectory());
-                   initData();
+                    initData();
                 }
             }
         }

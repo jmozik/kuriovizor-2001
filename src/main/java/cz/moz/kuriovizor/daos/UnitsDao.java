@@ -10,6 +10,10 @@ import cz.moz.kuriovizor.domain.ItemUnit;
 import cz.moz.kuriovizor.domain.Unit;
 import cz.moz.kuriovizor.domain.Unit2;
 import cz.moz.kuriovizor.domain.UnitEntities;
+import java.io.File;
+import java.io.IOError;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.List;
 
 /**
@@ -38,5 +42,5 @@ public interface UnitsDao {
     
     public void deleteUnit(Unit2 unit);
     
-    public void writeUnitOff(Unit2 unit, int count, String outDir);
+    public boolean writeUnitOff(Unit2 unit, int count, File reportFile) throws IOException;
 }

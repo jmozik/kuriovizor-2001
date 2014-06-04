@@ -13,12 +13,16 @@ import cz.moz.kuriovizor.domain.UnitEntities;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import org.hibernate.Query;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -98,34 +102,37 @@ public class UnitsDaoImpl extends CommonDao implements UnitsDao {
 
     @Transactional
     @Override
-    public void writeUnitOff(Unit2 unit, int count, String outDir) {
+    public boolean writeUnitOff(Unit2 unit, int count, File reportFile) throws IOException {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd_HH_mm_ss");
 
-        File file = new File(outDir + "/" + sdf.format(new Date()) + "-" + unit.getUnitName());
-//        FileOutputStream
+        File actDir = new File("./" + sdf.format(new Date()) + "-" + unit.getUnitName());
+        System.out.println("actDir: " + actDir.getAbsolutePath());
 
         String report = "Produce unit: " + unit.getUnitName();
         report += "\nin count: " + count + "\n\n";
         report += "Dependent Items from store:\n";
+        report += "Id; Item name; Writed off the store; Actual state in store\n";
 
         if (unit.isAvailable() && unit.getAvailableCount() >= count) {
             for (ItemUnit itemUnit : unit.getItems()) {
                 report += itemUnit.getItem().getId() + ";" + itemUnit.getItem().getProductName() + ";" + itemUnit.getRequiredCount() + ";";
-                deductItemCount(itemUnit.getItem(), count);
+                deductItemCount(itemUnit.getItem(), itemUnit.getRequiredCount() * count);
                 report += itemUnit.getItem().getCount() + "\n";
             }
         }
+
         try {
-            PrintWriter writer = new PrintWriter(file);
+            PrintWriter writer = new PrintWriter(reportFile);
             writer.print(report);
             writer.close();
-            
-            System.out.println("Output data saved to " + file.getAbsolutePath());
+            System.out.println("Output data saved to " + reportFile.getAbsolutePath());
+            return true;
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(UnitsDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
+            throw new MyReportFileCreationException(ex, reportFile, "File " + reportFile.getAbsolutePath() + " not found.");
         }
+
     }
-    
+
     @Transactional
     private void deductItemCount(Item item, int count) {
         int newValue = item.getCount() - count;

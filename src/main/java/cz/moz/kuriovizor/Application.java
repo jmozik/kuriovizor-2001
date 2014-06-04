@@ -54,6 +54,7 @@ public class Application {
             JOptionPane.showMessageDialog(null, "Put data to configuration file: " + file.getAbsolutePath(), "Missing properties file", JOptionPane.ERROR_MESSAGE);
             return null;
         } else {
+            System.out.println("Loaded property file " + file.getAbsolutePath());
             Properties conf = new Properties();
             conf.load(new FileInputStream(file));
             return conf;
